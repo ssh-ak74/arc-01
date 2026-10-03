@@ -6,15 +6,25 @@ module arc01 (
     logic [31:0] pc;
     logic [31:0] next_pc;
     logic [31:0] immediate;
+    logic [31:0] instruction;
+    logic [31:0] pc_plus_4;
+    logic [31:0] alu_result;
 
     logic branch;
+    logic jump;
     logic alu_zero;
 
 
-    assign next_pc = (branch && alu_zero)
-                   ? pc + immediate
-                   : pc + 32'd4;
+assign next_pc = (jump && instruction[6:0] == 7'b1100111)
+               ? {alu_result[31:1], 1'b0}
+               : jump
+               ? pc + immediate
+               : (branch && alu_zero)
+               ? pc + immediate
+               : pc + 32'd4;
 
+    assign pc_plus_4 = pc + 32'd4;
+ 
     arc01_pc pc_unit (
         .clk(clk),
         .reset(reset),
@@ -25,8 +35,6 @@ module arc01 (
     // =========================
     // Instruction Memory
     // =========================
-
-    logic [31:0] instruction;
 
     arc01_imem imem (
         .address(pc),
@@ -74,7 +82,6 @@ module arc01 (
     logic alu_src;
     logic mem_read;
     logic mem_write;
-    logic jump;
 
     arc01_control control (
         .opcode(instruction[6:0]),
@@ -117,8 +124,6 @@ module arc01 (
     // ALU
     // =========================
 
-    logic [31:0] alu_result;
-
     arc01_alu alu (
         .a(reg_data1),
         .b(alu_b),
@@ -146,6 +151,10 @@ arc01_memory data_memory (
 // Writeback
 // =========================
 
-assign write_data = mem_read ? memory_data : alu_result;
+assign write_data = jump
+                  ? pc_plus_4
+                  : mem_read
+                  ? memory_data
+                  : alu_result;
 
 endmodule
