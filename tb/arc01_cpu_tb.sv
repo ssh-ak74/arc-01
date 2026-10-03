@@ -14,37 +14,40 @@ module arc01_cpu_tb;
         clk = 0;
         reset = 1;
 
-        // Program:
         // 0x0000: ADDI x2, x0, 42
         // 0x0004: SW   x2, 0(x0)
+        // 0x0008: LW   x1, 0(x0)
 
         dut.imem.memory[0] = 32'h02A00113;
         dut.imem.memory[1] = 32'h00202023;
+        dut.imem.memory[2] = 32'h00002083;
 
-        // Reset
         #10;
-
         reset = 0;
 
         // Execute ADDI
         #10;
-
         if (dut.regfile.regs[2] !== 32'd42) begin
-            $display("FAIL: x2 = %0d, expected 42", dut.regfile.regs[2]);
+            $display("FAIL: ADDI");
             $finish;
         end
 
         // Execute SW
         #10;
-
         if (dut.data_memory.memory[0] !== 32'd42) begin
-            $display("FAIL: memory[0] = %0d, expected 42",
-                     dut.data_memory.memory[0]);
+            $display("FAIL: SW");
             $finish;
         end
 
-        $display("ARC-01 CPU: SW PASS");
-        $display("memory[0] = %0d", dut.data_memory.memory[0]);
+        // Execute LW
+        #10;
+        if (dut.regfile.regs[1] !== 32'd42) begin
+            $display("FAIL: LW");
+            $finish;
+        end
+
+        $display("ARC-01 CPU: LW PASS");
+        $display("x1 = %0d", dut.regfile.regs[1]);
 
         $finish;
     end
