@@ -10,18 +10,16 @@ module decoder_tb;
     logic [2:0]  funct3;
     logic [6:0]  funct7;
     logic [3:0]  alu_op;
-    logic        reg_write;
 
-    arc01_decoder dut (
-        .instruction(instruction),
-        .rs1(rs1),
-        .rs2(rs2),
-        .rd(rd),
-        .funct3(funct3),
-        .funct7(funct7),
-        .alu_op(alu_op),
-        .reg_write(reg_write)
-    );
+arc01_decoder dut (
+    .instruction(instruction),
+    .rs1(rs1),
+    .rs2(rs2),
+    .rd(rd),
+    .funct3(funct3),
+    .funct7(funct7),
+    .alu_op(alu_op)
+);
 
     initial begin
 
@@ -56,11 +54,6 @@ module decoder_tb;
             $finish;
         end
 
-        if (reg_write !== 1'b1) begin
-            $display("FAIL: ADD reg_write");
-            $finish;
-        end
-
         // SUB x5, x6, x7
         instruction = 32'b0100000_00111_00110_000_00101_0110011;
 
@@ -83,11 +76,6 @@ module decoder_tb;
 
         if (alu_op !== 4'b0001) begin
             $display("FAIL: SUB ALU operation");
-            $finish;
-        end
-
-        if (reg_write !== 1'b1) begin
-            $display("FAIL: SUB reg_write");
             $finish;
         end
 

@@ -63,14 +63,13 @@ module arc01_decoder (
                 alu_op = 4'b0000; // ADD address
             end
 
-            // Branch
-            7'b1100011: begin
-                case (funct3)
-                    3'b000: alu_op = 4'b0001; // BEQ: subtract rs1 - rs2
-                    default: alu_op = 4'b0000;
-                endcase
-            end
-
+7'b1100011: begin
+    case (funct3)
+        3'b000: alu_op = 4'b0001; // BEQ
+        3'b001: alu_op = 4'b0001; // BNE
+        default: alu_op = 4'b0000;
+    endcase
+end
         endcase
     end
 
