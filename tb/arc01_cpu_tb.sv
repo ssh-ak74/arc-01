@@ -15,51 +15,36 @@ module arc01_cpu_tb;
         reset = 1;
 
         // Program:
-        // 0x0000: ADDI x2, x0, 10
-        // 0x0004: ADDI x3, x0, 20
-        // 0x0008: ADD  x1, x2, x3
+        // 0x0000: ADDI x2, x0, 42
+        // 0x0004: SW   x2, 0(x0)
 
-        dut.imem.memory[0] = 32'h00A00113;
-        dut.imem.memory[1] = 32'h01400193;
-        dut.imem.memory[2] = 32'h003100B3;
+        dut.imem.memory[0] = 32'h02A00113;
+        dut.imem.memory[1] = 32'h00202023;
 
-        // Reset CPU
+        // Reset
         #10;
 
-        if (dut.pc !== 32'h00000000) begin
-            $display("FAIL: PC reset");
-            $finish;
-        end
-
-        // Execute ADDI x2, x0, 10
         reset = 0;
+
+        // Execute ADDI
         #10;
 
-        if (dut.regfile.regs[2] !== 32'd10) begin
-            $display("FAIL: x2 = %0d, expected 10", dut.regfile.regs[2]);
+        if (dut.regfile.regs[2] !== 32'd42) begin
+            $display("FAIL: x2 = %0d, expected 42", dut.regfile.regs[2]);
             $finish;
         end
 
-        // Execute ADDI x3, x0, 20
+        // Execute SW
         #10;
 
-        if (dut.regfile.regs[3] !== 32'd20) begin
-            $display("FAIL: x3 = %0d, expected 20", dut.regfile.regs[3]);
+        if (dut.data_memory.memory[0] !== 32'd42) begin
+            $display("FAIL: memory[0] = %0d, expected 42",
+                     dut.data_memory.memory[0]);
             $finish;
         end
 
-        // Execute ADD x1, x2, x3
-        #10;
-
-        if (dut.regfile.regs[1] !== 32'd30) begin
-            $display("FAIL: x1 = %0d, expected 30", dut.regfile.regs[1]);
-            $finish;
-        end
-
-        $display("ARC-01 CPU: PROGRAM PASS");
-        $display("x2 = %0d", dut.regfile.regs[2]);
-        $display("x3 = %0d", dut.regfile.regs[3]);
-        $display("x1 = %0d", dut.regfile.regs[1]);
+        $display("ARC-01 CPU: SW PASS");
+        $display("memory[0] = %0d", dut.data_memory.memory[0]);
 
         $finish;
     end

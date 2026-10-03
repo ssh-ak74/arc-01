@@ -13,6 +13,8 @@ module arc01_decoder (
 
     localparam logic [6:0] OPCODE_R = 7'b0110011;
     localparam logic [6:0] OPCODE_I = 7'b0010011;
+    localparam logic [6:0] OPCODE_LOAD  = 7'b0000011;
+    localparam logic [6:0] OPCODE_STORE = 7'b0100011;
 
     always_comb begin
         rs1    = instruction[19:15];
@@ -53,6 +55,12 @@ module arc01_decoder (
 
             default: begin
                 alu_op = 4'b0000;
+            end
+
+            // Load / Store
+            OPCODE_LOAD,
+            OPCODE_STORE: begin
+                alu_op = 4'b0000; // ADD address
             end
 
         endcase

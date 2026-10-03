@@ -123,10 +123,25 @@ module arc01 (
         .zero(alu_zero)
     );
 
-    // =========================
-    // Writeback
-    // =========================
+// =========================
+// Data Memory
+// =========================
 
-    assign write_data = alu_result;
+logic [31:0] memory_data;
+
+arc01_memory data_memory (
+    .clk(clk),
+    .address(alu_result),
+    .write_data(reg_data2),
+    .mem_write(mem_write),
+    .mem_read(mem_read),
+    .read_data(memory_data)
+);
+
+// =========================
+// Writeback
+// =========================
+
+assign write_data = mem_read ? memory_data : alu_result;
 
 endmodule
