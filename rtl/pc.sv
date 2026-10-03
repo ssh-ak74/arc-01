@@ -1,6 +1,7 @@
 module arc01_pc (
     input  logic        clk,
     input  logic        reset,
+    input  logic [31:0] next_pc,
     output logic [31:0] pc
 );
 
@@ -8,7 +9,7 @@ module arc01_pc (
         if (reset)
             pc <= 32'h00000000;
         else
-            pc <= pc + 32'd4;
+            pc <= next_pc;
     end
 
 endmodule

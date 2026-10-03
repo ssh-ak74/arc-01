@@ -3,15 +3,22 @@ module arc01 (
     input logic reset
 );
 
-    // =========================
-    // Program Counter
-    // =========================
-
     logic [31:0] pc;
+    logic [31:0] next_pc;
+    logic [31:0] immediate;
+
+    logic branch;
+    logic alu_zero;
+
+
+    assign next_pc = (branch && alu_zero)
+                   ? pc + immediate
+                   : pc + 32'd4;
 
     arc01_pc pc_unit (
         .clk(clk),
         .reset(reset),
+        .next_pc(next_pc),
         .pc(pc)
     );
 
@@ -53,7 +60,6 @@ module arc01 (
     // Immediate Generator
     // =========================
 
-    logic [31:0] immediate;
 
     arc01_immgen immgen (
         .instruction(instruction),
@@ -68,7 +74,6 @@ module arc01 (
     logic alu_src;
     logic mem_read;
     logic mem_write;
-    logic branch;
     logic jump;
 
     arc01_control control (
@@ -113,7 +118,6 @@ module arc01 (
     // =========================
 
     logic [31:0] alu_result;
-    logic alu_zero;
 
     arc01_alu alu (
         .a(reg_data1),

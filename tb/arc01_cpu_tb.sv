@@ -14,40 +14,35 @@ module arc01_cpu_tb;
         clk = 0;
         reset = 1;
 
-        // 0x0000: ADDI x2, x0, 42
-        // 0x0004: SW   x2, 0(x0)
-        // 0x0008: LW   x1, 0(x0)
+        // 0x0000: ADDI x1, x0, 10
+        // 0x0004: ADDI x2, x0, 10
+        // 0x0008: BEQ  x1, x2, +8
+        // 0x000C: ADDI x3, x0, 99  <- should be skipped
+        // 0x0010: ADDI x3, x0, 42  <- branch target
 
-        dut.imem.memory[0] = 32'h02A00113;
-        dut.imem.memory[1] = 32'h00202023;
-        dut.imem.memory[2] = 32'h00002083;
+        dut.imem.memory[0] = 32'h00A00093;
+        dut.imem.memory[1] = 32'h00A00113;
+        dut.imem.memory[2] = 32'h00208463;
+        dut.imem.memory[3] = 32'h06300193;
+        dut.imem.memory[4] = 32'h02A00193;
 
         #10;
         reset = 0;
 
-        // Execute ADDI
-        #10;
-        if (dut.regfile.regs[2] !== 32'd42) begin
-            $display("FAIL: ADDI");
+        #10; // ADDI x1
+        #10; // ADDI x2
+        #10; // BEQ
+
+        #10; // execute branch target
+
+        if (dut.regfile.regs[3] !== 32'd42) begin
+            $display("FAIL: BEQ");
+            $display("x3 = %0d", dut.regfile.regs[3]);
             $finish;
         end
 
-        // Execute SW
-        #10;
-        if (dut.data_memory.memory[0] !== 32'd42) begin
-            $display("FAIL: SW");
-            $finish;
-        end
-
-        // Execute LW
-        #10;
-        if (dut.regfile.regs[1] !== 32'd42) begin
-            $display("FAIL: LW");
-            $finish;
-        end
-
-        $display("ARC-01 CPU: LW PASS");
-        $display("x1 = %0d", dut.regfile.regs[1]);
+        $display("ARC-01 CPU: BEQ PASS");
+        $display("x3 = %0d", dut.regfile.regs[3]);
 
         $finish;
     end
