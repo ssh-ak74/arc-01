@@ -69,6 +69,7 @@ module arc01_decoder (
         3'b001: alu_op = 4'b0001; // BNE
         3'b100: alu_op = 4'b1000; // BLT
         3'b101: alu_op = 4'b1000; // BGE
+        3'b110: alu_op = 4'b1001; // BLTU
         default: alu_op = 4'b0000;
     endcase
 end
