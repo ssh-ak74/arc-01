@@ -19,7 +19,10 @@ assign next_pc = (jump && instruction[6:0] == 7'b1100111)
                ? {alu_result[31:1], 1'b0}
                : jump
                ? pc + immediate
-               : (branch && alu_zero)
+               : (branch && (
+                     (instruction[14:12] == 3'b000 && alu_zero) ||
+                     (instruction[14:12] == 3'b001 && !alu_zero)
+                 ))
                ? pc + immediate
                : pc + 32'd4;
 

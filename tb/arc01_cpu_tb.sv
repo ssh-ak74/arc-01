@@ -14,39 +14,35 @@ module arc01_cpu_tb;
         clk = 0;
         reset = 1;
 
-        // 0x0000: ADDI x1, x0, 12
-        // 0x0004: JALR x5, x1, 0
-        // 0x0008: ADDI x2, x0, 99   <- should be skipped
-        // 0x000C: ADDI x2, x0, 42   <- JALR target
+        // 0x0000: ADDI x1, x0, 10
+        // 0x0004: ADDI x2, x0, 20
+        // 0x0008: BNE  x1, x2, +8
+        // 0x000C: ADDI x3, x0, 99   <- should be skipped
+        // 0x0010: ADDI x3, x0, 42   <- branch target
 
-        dut.imem.memory[0] = 32'h00C00093;
-        dut.imem.memory[1] = 32'h000082E7;
-        dut.imem.memory[2] = 32'h06300113;
-        dut.imem.memory[3] = 32'h02A00113;
+        dut.imem.memory[0] = 32'h00A00093;
+        dut.imem.memory[1] = 32'h01400113;
+        dut.imem.memory[2] = 32'h00209463;
+        dut.imem.memory[3] = 32'h06300193;
+        dut.imem.memory[4] = 32'h02A00193;
 
         #10;
         reset = 0;
 
         #10; // ADDI x1
-        #10; // JALR
+        #10; // ADDI x2
+        #10; // BNE
 
-        if (dut.regfile.regs[5] !== 32'd8) begin
-            $display("FAIL: JALR link");
-            $display("x5 = %0d", dut.regfile.regs[5]);
+        #10; // execute branch target
+
+        if (dut.regfile.regs[3] !== 32'd42) begin
+            $display("FAIL: BNE");
+            $display("x3 = %0d", dut.regfile.regs[3]);
             $finish;
         end
 
-        #10; // execute target
-
-        if (dut.regfile.regs[2] !== 32'd42) begin
-            $display("FAIL: JALR jump");
-            $display("x2 = %0d", dut.regfile.regs[2]);
-            $finish;
-        end
-
-        $display("ARC-01 CPU: JALR PASS");
-        $display("x5 = %0d", dut.regfile.regs[5]);
-        $display("x2 = %0d", dut.regfile.regs[2]);
+        $display("ARC-01 CPU: BNE PASS");
+        $display("x3 = %0d", dut.regfile.regs[3]);
 
         $finish;
     end
