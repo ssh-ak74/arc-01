@@ -24,7 +24,8 @@ assign next_pc = (jump && instruction[6:0] == 7'b1100111)
     (instruction[14:12] == 3'b001 && !alu_zero) ||
     (instruction[14:12] == 3'b100 && (alu_result != 32'd0)) ||
     (instruction[14:12] == 3'b101 && (alu_result == 32'd0)) ||
-    (instruction[14:12] == 3'b110 && (alu_result != 32'd0))
+    (instruction[14:12] == 3'b110 && (alu_result != 32'd0)) ||
+    (instruction[14:12] == 3'b111 && alu_result == 32'd0)
 ))
                ? pc + immediate
                : pc + 32'd4;
