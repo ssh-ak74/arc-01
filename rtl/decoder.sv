@@ -67,6 +67,7 @@ module arc01_decoder (
     case (funct3)
         3'b000: alu_op = 4'b0001; // BEQ
         3'b001: alu_op = 4'b0001; // BNE
+        3'b100: alu_op = 4'b1000; // BLT
         default: alu_op = 4'b0000;
     endcase
 end
