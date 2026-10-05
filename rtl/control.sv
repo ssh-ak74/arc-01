@@ -18,6 +18,7 @@ module arc01_control (
     localparam logic [6:0] OPCODE_JALR  = 7'b1100111;
     localparam logic [6:0] OPCODE_I     = 7'b0010011;
     localparam logic [6:0] OPCODE_LUI   = 7'b0110111;
+    localparam logic [6:0] OPCODE_AUIPC = 7'b0010111;
 
     always_comb begin
         // Safe defaults
@@ -75,6 +76,11 @@ module arc01_control (
 	
 	    // LUI
 		OPCODE_LUI: begin
+    		reg_write = 1'b1;
+		end
+
+	     // AUIPC
+		OPCODE_AUIPC: begin
     		reg_write = 1'b1;
 		end
 			

@@ -14,26 +14,29 @@ module arc01_cpu_tb;
         clk = 0;
         reset = 1;
 
-        // 0x0000: LUI x1, 0x12345
-        // x1 should become 0x12345000
+// 0x0000: ADDI x2, x0, 0
+// 0x0004: AUIPC x1, 0x12345
+// x1 should = 0x12345004
 
-        dut.imem.memory[0] = 32'h123450B7;
+dut.imem.memory[0] = 32'h00000113;
+dut.imem.memory[1] = 32'h12345097;
 
-        #10;
-        reset = 0;
+#10;
+reset = 0;
 
-        #10;
+#10; // ADDI
+#10; // AUIPC
 
-        if (dut.regfile.regs[1] !== 32'h12345000) begin
-            $display("FAIL: LUI");
-            $display("x1 = %h", dut.regfile.regs[1]);
-            $finish;
-        end
+if (dut.regfile.regs[1] !== 32'h12345004) begin
+    $display("FAIL: AUIPC non-zero PC");
+    $display("x1 = %h", dut.regfile.regs[1]);
+    $finish;
+end
 
-        $display("ARC-01 CPU: LUI PASS");
-        $display("x1 = %h", dut.regfile.regs[1]);
+$display("ARC-01 CPU: AUIPC NON-ZERO PC PASS");
+$display("x1 = %h", dut.regfile.regs[1]);
 
-        $finish;
+$finish;
     end
 
 endmodule

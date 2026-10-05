@@ -164,6 +164,8 @@ assign write_data = jump
                   ? memory_data
                   : (instruction[6:0] == 7'b0110111)
                   ? immediate
+                  : (instruction[6:0] == 7'b0010111)
+                  ? pc + immediate
                   : alu_result;
 
 endmodule
