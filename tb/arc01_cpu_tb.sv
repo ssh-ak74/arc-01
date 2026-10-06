@@ -14,26 +14,25 @@ module arc01_cpu_tb;
         clk = 0;
         reset = 1;
 
-        // 0x0000: ADDI x1, x0, 15
-        // 0x0004: ANDI x2, x1, 10
-        // 15 & 10 = 10
+        // ADDI x1, x0, 10
+        // ORI  x2, x1, 5
+        // 10 | 5 = 15
 
-        dut.imem.memory[0] = 32'h00F00093;
-        dut.imem.memory[1] = 32'h00A0F113;
+        dut.imem.memory[0] = 32'h00A00093;
+        dut.imem.memory[1] = 32'h0050E113;
 
         #10;
         reset = 0;
 
-        #10;
-        #10;
+        #30;
 
-        if (dut.regfile.regs[2] !== 32'd10) begin
-            $display("FAIL: ANDI");
+        if (dut.regfile.regs[2] !== 32'd15) begin
+            $display("FAIL: ORI");
             $display("x2 = %0d", dut.regfile.regs[2]);
             $finish;
         end
 
-        $display("ARC-01 CPU: ANDI PASS");
+        $display("ARC-01 CPU: ORI PASS");
         $display("x2 = %0d", dut.regfile.regs[2]);
 
         $finish;
