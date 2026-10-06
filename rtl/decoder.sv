@@ -49,6 +49,7 @@ module arc01_decoder (
             OPCODE_I: begin
                 case (funct3)
                     3'b000: alu_op = 4'b0000; // ADDI
+		    3'b111: alu_op = 4'b0010; // ANDI
                     default: alu_op = 4'b0000;
                 endcase
             end
