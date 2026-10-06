@@ -15,25 +15,25 @@ module arc01_cpu_tb;
         reset = 1;
 
         // ADDI x1, x0, 10
-        // ORI  x2, x1, 5
-        // 10 | 5 = 15
+        // ORI  x2, x1, 10
+        // 10 | ^ 10 = 5
 
-        dut.imem.memory[0] = 32'h00A00093;
-        dut.imem.memory[1] = 32'h0050E113;
+        dut.imem.memory[0] = 32'h00F00093;
+	dut.imem.memory[1] = 32'h00A0C113;
 
         #10;
         reset = 0;
 
         #30;
 
-        if (dut.regfile.regs[2] !== 32'd15) begin
-            $display("FAIL: ORI");
-            $display("x2 = %0d", dut.regfile.regs[2]);
-            $finish;
-        end
+if (dut.regfile.regs[2] !== 32'd5) begin
+    $display("FAIL: XORI");
+    $display("x2 = %0d", dut.regfile.regs[2]);
+    $finish;
+end
 
-        $display("ARC-01 CPU: ORI PASS");
-        $display("x2 = %0d", dut.regfile.regs[2]);
+$display("ARC-01 CPU: XORI PASS");
+$display("x2 = %0d", dut.regfile.regs[2]);
 
         $finish;
     end
