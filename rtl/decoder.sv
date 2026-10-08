@@ -50,6 +50,7 @@ module arc01_decoder (
                 case (funct3)
                     3'b000: alu_op = 4'b0000; // ADDI
 		    3'b010: alu_op = 4'b1000; // SLTI
+		    3'b011: alu_op = 4'b1001; // SLTIU
 		    3'b100: alu_op = 4'b0100; // XORI
 		    3'b110: alu_op = 4'b0011; // ORI
 		    3'b111: alu_op = 4'b0010; // ANDI

@@ -18,23 +18,22 @@ module arc01_cpu_tb;
         // SLTI  x2, x1, 20
         // 10 | < 10 → 1
 
-        dut.imem.memory[0] = 32'h00A00093;
-	dut.imem.memory[1] = 32'h0140A113;
+dut.imem.memory[0] = 32'hFFF00093; // ADDI x1, x0, -1
+dut.imem.memory[1] = 32'h0010B113; // SLTIU x2, x1, 1
 
         #10;
         reset = 0;
 
         #30;
 
-if (dut.regfile.regs[2] !== 32'd1) begin
-    $display("FAIL: SLTI");
+if (dut.regfile.regs[2] !== 32'd0) begin
+    $display("FAIL: SLTIU");
     $display("x2 = %0d", dut.regfile.regs[2]);
     $finish;
 end
 
-$display("ARC-01 CPU: SLTI PASS");
+$display("ARC-01 CPU: SLTIU PASS");
 $display("x2 = %0d", dut.regfile.regs[2]);
-
         $finish;
     end
 
