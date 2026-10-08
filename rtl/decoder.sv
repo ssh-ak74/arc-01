@@ -46,17 +46,25 @@ module arc01_decoder (
             end
 
             // I-type
-            OPCODE_I: begin
-                case (funct3)
-                    3'b000: alu_op = 4'b0000; // ADDI
-		    3'b010: alu_op = 4'b1000; // SLTI
-		    3'b011: alu_op = 4'b1001; // SLTIU
-		    3'b100: alu_op = 4'b0100; // XORI
-		    3'b110: alu_op = 4'b0011; // ORI
-		    3'b111: alu_op = 4'b0010; // ANDI
-                    default: alu_op = 4'b0000;
-                endcase
-            end
+OPCODE_I: begin
+    case (funct3)
+        3'b000: alu_op = 4'b0000; // ADDI
+        3'b001: alu_op = 4'b0101; // SLLI
+        3'b010: alu_op = 4'b1000; // SLTI
+        3'b011: alu_op = 4'b1001; // SLTIU
+        3'b100: alu_op = 4'b0100; // XORI
+        3'b101: begin
+            case (funct7)
+                7'b0000000: alu_op = 4'b0110; // SRLI
+                7'b0100000: alu_op = 4'b0111; // SRAI
+                default:    alu_op = 4'b0000;
+            endcase
+        end
+        3'b110: alu_op = 4'b0011; // ORI
+        3'b111: alu_op = 4'b0010; // ANDI
+        default: alu_op = 4'b0000;
+    endcase
+end
 
             default: begin
                 alu_op = 4'b0000;
