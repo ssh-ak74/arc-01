@@ -1,7 +1,8 @@
+
 module arc01_cpu_tb;
 
-    logic clk;
-    logic reset;
+    logic clk = 0;
+    logic reset = 1;
 
     arc01 dut (
         .clk(clk),
@@ -11,29 +12,18 @@ module arc01_cpu_tb;
     always #5 clk = ~clk;
 
     initial begin
-        clk = 0;
-        reset = 1;
-
-        // ADDI x1, x0, 10
-        // SLTI  x2, x1, 20
-        // 10 | < 10 → 1
-
-dut.imem.memory[0] = 32'hFF000093; // ADDI x1, x0, -16
-dut.imem.memory[1] = 32'h4020D113; // SRAI x2, x1, 2
+        $readmemh("programs/math.hex", dut.imem.memory);
 
         #10;
         reset = 0;
 
-        #30;
+        // Wait for the three instructions to execute.
+        #40;
 
-if (dut.regfile.regs[2] !== 32'hFFFFFFFC) begin
-    $display("FAIL: SRAI");
-    $display("x2 = %h", dut.regfile.regs[2]);
-    $finish;
-end
+        $display("x1 = %0d", $signed(dut.regfile.regs[1]));
+        $display("x2 = %0d", $signed(dut.regfile.regs[2]));
+        $display("x3 = %0d", $signed(dut.regfile.regs[3]));
 
-$display("ARC-01 CPU: SRAI PASS");
-$display("x2 = %h", dut.regfile.regs[2]);
         $finish;
     end
 

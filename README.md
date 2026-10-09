@@ -2,23 +2,22 @@
 
 ARC-01 is an open-source 32-bit RISC-V processor built from scratch in SystemVerilog.
 
-The project is developed from the hardware up, starting with individual RTL components and gradually integrating them into a functional processor.
+The project develops a processor from individual hardware components into an integrated, simulation-tested CPU.
 
 ## Goals
 
 * RV32I-compatible processor
-* 32-bit architecture
-* 32 general-purpose registers
+* 32-bit architecture with 32 general-purpose registers
 * Synthesizable SystemVerilog RTL
-* Simulation-tested
-* FPGA-ready
-* Eventually ASIC-capable
+* Simulation-based verification
+* FPGA implementation
+* Long-term ASIC exploration
 
 ## Architecture
 
-ARC-01 is built from the following hardware components:
+ARC-01 consists of the following hardware components:
 
-1. ALU
+1. Arithmetic Logic Unit (ALU)
 2. Register file
 3. Program counter
 4. Instruction memory
@@ -28,7 +27,7 @@ ARC-01 is built from the following hardware components:
 8. Data memory
 9. CPU datapath
 
-## Current Progress
+## Instruction Support
 
 ### Integer Operations
 
@@ -81,9 +80,9 @@ ARC-01 is built from the following hardware components:
 
 ## Verification
 
-ARC-01 is verified using SystemVerilog simulation testbenches at both component and CPU levels.
+ARC-01 is tested using SystemVerilog testbenches at both component and CPU levels.
 
-Verified hardware components include:
+Verified components include:
 
 * ALU
 * Register file
@@ -94,20 +93,26 @@ Verified hardware components include:
 * Instruction memory
 * Data memory
 
-CPU-level verification currently covers:
+CPU-level tests cover arithmetic, logical and shift operations, signed and unsigned comparisons, conditional branches, jumps, load/store operations, and immediate instructions.
 
-* Arithmetic operations
-* Logical operations
-* Shift operations
-* Signed comparisons
-* Unsigned comparisons
-* Conditional branches
-* Jumps
-* Load/store operations
-* Upper-immediate operations
-* Immediate ALU operations
+The CPU has also been tested with machine-code programs that perform calculations using register-based execution.
 
-## Repository
+## Calculator Interface
+
+ARC-01 includes a Bash-based terminal interface for entering integer values and running arithmetic programs on the simulated CPU.
+
+The interface generates RISC-V machine code, launches the Icarus Verilog simulation, and displays the resulting register values.
+
+Bash and other programming languages may be used for interfaces, tooling, automation, testing, and software support. The processor's hardware logic and instruction execution are implemented in SystemVerilog.
+
+## Technology Stack
+
+* SystemVerilog — processor hardware and datapath
+* Icarus Verilog — compilation and simulation
+* Bash — terminal interface and simulation automation
+* Git and GitHub — version control and project hosting
+
+## Repository Structure
 
 ```text
 arc-01/
@@ -121,7 +126,6 @@ arc-01/
 │   ├── immgen.sv
 │   ├── memory.sv
 │   └── imem.sv
-│
 ├── tb/
 │   ├── arc01_tb.sv
 │   ├── regfile_tb.sv
@@ -132,36 +136,12 @@ arc-01/
 │   ├── memory_tb.sv
 │   ├── arc01_cpu_tb.sv
 │   └── imem_tb.sv
-│
+├── programs/
+│   └── math.hex
+├── run_math.sh
 ├── README.md
 └── LICENSE
 ```
-
-## Development
-
-ARC-01 is currently developed and tested using:
-
-* SystemVerilog
-* Icarus Verilog
-* Git
-* GitHub
-
-Each major hardware component has its own testbench, while CPU-level tests verify complete instruction execution through the processor datapath.
-
-## Roadmap
-
-The project will continue toward:
-
-* Complete RV32I support
-* Expanded verification
-* Exception and interrupt handling
-* UART and GPIO peripherals
-* FPGA implementation
-* Software support
-* Performance testing
-* Future ISA extensions
-* Pipelined architecture
-* ASIC exploration
 
 ## License
 
