@@ -8,7 +8,7 @@ module arc01_decoder (
     output logic [2:0] funct3,
     output logic [6:0] funct7,
 
-    output logic [3:0] alu_op
+    output logic [4:0] alu_op
 );
 
     localparam logic [6:0] OPCODE_R = 7'b0110011;
@@ -38,6 +38,10 @@ module arc01_decoder (
                     10'b0000001_001: alu_op = 4'b1011; // MULH
                     10'b0000001_010: alu_op = 4'b1101; // MULHSU
                     10'b0000001_011: alu_op = 4'b1100; // MULHU
+		    10'b0000001_100: alu_op = 5'b01110; // DIV
+		    10'b0000001_101: alu_op = 5'b01111; // DIVU
+		    10'b0000001_110: alu_op = 5'b10000; // REM
+		    10'b0000001_111: alu_op = 5'b10001; // REMU
                     10'b0000000_110: alu_op = 4'b0011; // OR
                     10'b0000000_100: alu_op = 4'b0100; // XOR
                     10'b0000000_001: alu_op = 4'b0101; // SLL

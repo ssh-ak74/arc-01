@@ -59,7 +59,7 @@ assign next_pc = (jump && instruction[6:0] == 7'b1100111)
     logic [2:0] funct3;
     logic [6:0] funct7;
 
-    logic [3:0] alu_op;
+    logic [4:0] alu_op;
 
     arc01_decoder decoder (
         .instruction(instruction),
