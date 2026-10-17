@@ -35,6 +35,9 @@ module arc01_decoder (
                     10'b0100000_000: alu_op = 4'b0001; // SUB
                     10'b0000000_111: alu_op = 4'b0010; // AND
                     10'b0000001_000: alu_op = 4'b1010; // MUL
+                    10'b0000001_001: alu_op = 4'b1011; // MULH
+                    10'b0000001_010: alu_op = 4'b1101; // MULHSU
+                    10'b0000001_011: alu_op = 4'b1100; // MULHU
                     10'b0000000_110: alu_op = 4'b0011; // OR
                     10'b0000000_100: alu_op = 4'b0100; // XOR
                     10'b0000000_001: alu_op = 4'b0101; // SLL
