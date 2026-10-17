@@ -13,6 +13,7 @@ module arc01_alu (
             4'b0010: result = a & b;
             4'b0011: result = a | b;
             4'b0100: result = a ^ b;
+	    4'b1010: result = a * b; // MUL: lower 32 bits
             4'b0101: result = a << b[4:0];
             4'b0110: result = a >> b[4:0];
             4'b0111: result = $signed(a) >>> b[4:0];
