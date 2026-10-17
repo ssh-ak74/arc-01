@@ -18,21 +18,28 @@ module arc01_c_tb;
 
         $readmemh("programs/first.hex", dut.imem.memory);
 
-        // Stop safely after the first instruction.
+        // Simulate a caller returning to address 12.
+        dut.regfile.regs[1] = 32'd12;
+
         @(posedge clk);
         #1;
         reset = 0;
 
-        repeat (2) @(posedge clk);
+        // Execute ADDI, RET, then the NOP at address 12.
+        repeat (3) @(posedge clk);
         #1;
 
         if (dut.regfile.regs[10] !== 32'd42)
             $fatal(1, "FAIL: a0 expected 42, got %0d",
                    $signed(dut.regfile.regs[10]));
 
+        if (dut.pc !== 32'd16)
+            $fatal(1, "FAIL: PC expected 16, got %0d", dut.pc);
+
         $display("ARC-01 C PROGRAM: PASS");
         $display("main() result: %0d",
                  $signed(dut.regfile.regs[10]));
+        $display("RET verified: PC = 0x%08h", dut.pc);
 
         $finish;
     end
